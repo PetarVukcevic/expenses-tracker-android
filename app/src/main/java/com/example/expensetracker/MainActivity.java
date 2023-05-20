@@ -37,19 +37,30 @@ public class MainActivity extends Activity {
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
+        // Get a reference to the database
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-//        insert("incomes", "Salary", "This is my salary", 200.5F);
-        float sumOfExpenses = getSumOfAmount("expenses");
-        float sumOfIncomes = getSumOfAmount("incomes");
+        // Call the insert method to insert data into the table
+//        insert("incomes", "Salary", "This is my salary", 200.5F, database);
+
+        // Call the getSumOfAmount method to retrieve the sum
+        float sumOfExpenses = getSumOfAmount("expenses", database);
+        float sumOfIncomes = getSumOfAmount("incomes", database);
+
+        // Close the database connection
+        database.close();
+
+        // Set the sum value to the TextView
         mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses));
     }
 
-    public void insert(String table, String title, String description, Float amount) {
+
+    public void insert(String table, String title, String description, Float amount, SQLiteDatabase database) {
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
         // Get a reference to the database
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        database = databaseHelper.getWritableDatabase();
 
         // Create a ContentValues object to hold the values you want to insert
         ContentValues values = new ContentValues();
@@ -73,28 +84,25 @@ public class MainActivity extends Activity {
         database.close();
     }
 
-    public float getSumOfAmount(String tableName) {
-            // Assuming you have a readable database object
-            SQLiteDatabase database = databaseHelper.getReadableDatabase();
+    public float getSumOfAmount(String tableName, SQLiteDatabase database) {
+        // Define the column to sum
+        String columnToSum = "amount";
 
-            // Define the column to sum
-            String columnToSum = "amount";
+        // Execute the query to calculate the sum
+        String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName;
+        Cursor cursor = database.rawQuery(query, null);
 
-            // Execute the query to calculate the sum
-            String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName;
-            Cursor cursor = database.rawQuery(query, null);
+        // Retrieve the sum value from the cursor
+        float totalAmount = 0.0f;
+        if (cursor.moveToFirst()) {
+            totalAmount = cursor.getFloat(0);
+        }
 
-            // Retrieve the sum value from the cursor
-            float totalAmount = 0.0f;
-            if (cursor.moveToFirst()) {
-                totalAmount = cursor.getFloat(0);
-            }
+        // Close the cursor
+        cursor.close();
 
-            // Close the cursor and database when you're done
-            cursor.close();
-            database.close();
-
-            return totalAmount;
+        return totalAmount;
     }
+
 
 }
