@@ -7,6 +7,12 @@
     <string name="add_incomes_heading">Add new Incomes</string>
     <string name="add_expenses_heading">Add new Expenses</string>
 
+    <!--  Add expense/income form  -->
+    <string name="form_title">Title</string>
+    <string name="form_description">Description</string>
+    <string name="form_amount">Amount</string>
+
+
     <!--  Add Income, Add expense button  -->
     <string name="add_income_button">Add Income</string>
     <string name="add_expense_button">Add Expense</string>

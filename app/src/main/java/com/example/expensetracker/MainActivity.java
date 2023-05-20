@@ -60,8 +60,6 @@ public class MainActivity extends Activity {
         // Get a reference to the database
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        // Call the insert method to insert data into the table
-//        insertTransaction("incomes", "Salary", "This is my salary", 200.5F, database);
 
         // Call the getSumOfAmount method to retrieve the sum
         float sumOfExpenses = getSumOfAmount("expenses", database);
@@ -75,34 +73,7 @@ public class MainActivity extends Activity {
     }
 
 
-    public void insertTransaction(String table, String title, String description, Float amount, SQLiteDatabase database) {
-        // Create an instance of your DatabaseHelper
-        databaseHelper = new DatabaseHelper(this);
 
-        // Get a reference to the database
-        database = databaseHelper.getWritableDatabase();
-
-        // Create a ContentValues object to hold the values you want to insert
-        ContentValues values = new ContentValues();
-        values.put("title", title);
-        values.put("description", description);
-        values.put("amount", amount);
-        values.put("created_at", System.currentTimeMillis());
-
-        // Insert the values into the table
-        long rowId = database.insert(table, null, values);
-
-        if (rowId != -1) {
-            // Insertion successful
-            // rowId contains the ID of the newly inserted row
-            System.out.println("Uspjesno opet");
-        } else {
-            // Insertion failed
-            System.out.println("Ne valja kurca");
-
-        }
-        database.close();
-    }
 
     public float getSumOfAmount(String tableName, SQLiteDatabase database) {
         // Define the column to sum
