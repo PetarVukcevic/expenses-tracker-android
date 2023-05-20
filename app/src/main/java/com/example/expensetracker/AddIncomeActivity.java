@@ -44,6 +44,34 @@ public class AddIncomeActivity extends Activity {
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String title = mTitleInput.getText().toString();
+                String description = mDescriptionInput.getText().toString();
+                String amountText = mAddAmountInput.getText().toString().trim();
+
+                // Perform validation
+                if (title.isEmpty()) {
+                    mTitleInput.setError("Please enter a title");
+                    return;
+                }
+
+                if (description.isEmpty()) {
+                    mDescriptionInput.setError("Please enter a description");
+                    return;
+                }
+
+                if (amountText.isEmpty()) {
+                    mAddAmountInput.setError("Please enter an amount");
+                    return;
+                }
+
+                float amount;
+                try {
+                    amount = Float.parseFloat(amountText);
+                } catch (NumberFormatException e) {
+                    mAddAmountInput.setError("Invalid amount format");
+                    return;
+                }
                 insertTransaction("incomes", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(), Float.valueOf(mAddAmountInput.getText().toString()), database);
             }
         });

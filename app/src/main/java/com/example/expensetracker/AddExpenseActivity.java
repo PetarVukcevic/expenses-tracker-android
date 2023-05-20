@@ -68,8 +68,37 @@ public class AddExpenseActivity extends Activity {
                 int categoryId = categories.get(category);
                 String title = mTitleInput.getText().toString();
                 String description = mDescriptionInput.getText().toString();
-                Float amount = Float.valueOf(mAddAmountInput.getText().toString());
+                String amountText = mAddAmountInput.getText().toString().trim();
 
+                // Perform validation
+                if (category.isEmpty()) {
+                    Toast.makeText(AddExpenseActivity.this, "Please select a category", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (title.isEmpty()) {
+                    mTitleInput.setError("Please enter a title");
+                    return;
+                }
+
+                if (description.isEmpty()) {
+                    mDescriptionInput.setError("Please enter a description");
+                    return;
+                }
+
+                if (amountText.isEmpty()) {
+                    mAddAmountInput.setError("Please enter an amount");
+                    return;
+                }
+
+                float amount;
+                try {
+                    amount = Float.parseFloat(amountText);
+                } catch (NumberFormatException e) {
+                    mAddAmountInput.setError("Invalid amount format");
+                    return;
+                }
+                
                 // Insert the expense into the database
                 insertTransaction("expenses", categoryId, title, description, amount, database);
             }
