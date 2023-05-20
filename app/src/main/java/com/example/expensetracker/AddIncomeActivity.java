@@ -3,6 +3,7 @@ package com.example.expensetracker;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddIncomeActivity extends Activity {
 
@@ -79,4 +83,5 @@ public class AddIncomeActivity extends Activity {
         }
         database.close();
     }
+
 }

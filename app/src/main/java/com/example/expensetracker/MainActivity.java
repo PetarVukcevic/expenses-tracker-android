@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -39,10 +40,12 @@ public class MainActivity extends Activity {
         mHeadingTextView = (TextView) findViewById(R.id.budget_value);
         mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
         mAddExpenseButton = (Button) findViewById(R.id.add_expense_button);
+
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(MainActivity.this, AddIncomeActivity.class);
+                startActivity(i);
             }
         });
 
@@ -103,5 +106,27 @@ public class MainActivity extends Activity {
         return totalAmount;
     }
 
+    public void insertCategory(String name) {
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+
+        long rowId = db.insert("categories", null, values);
+
+        if (rowId != -1) {
+            // Insertion successful
+            // rowId contains the ID of the newly inserted row
+            Log.d("DatabaseHelper", "Category inserted successfully!");
+        } else {
+            // Insertion failed
+            Log.d("DatabaseHelper", "Failed to insert category!");
+        }
+
+        db.close();
+    }
 
 }

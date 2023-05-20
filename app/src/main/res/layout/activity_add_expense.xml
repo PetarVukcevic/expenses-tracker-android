@@ -13,25 +13,36 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:text="@string/add_expenses_heading"/>
+
     <EditText
         android:id="@+id/add_title_input"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:hint="@string/form_title"/>
+
     <EditText
         android:id="@+id/add_description_input"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:hint="@string/form_description"/>
+
     <EditText
         android:id="@+id/add_amount_input"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:hint="@string/form_amount"/>
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
     <Button
         android:id="@+id/add_expense_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:text="@string/add_expense_button"/>
 </LinearLayout>
