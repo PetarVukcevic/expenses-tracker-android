@@ -8,11 +8,11 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/add_expenses_heading"
+        android:id="@+id/add_incomes_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="@string/add_expenses_heading"/>
+        android:text="@string/add_incomes_heading"/>
     <EditText
         android:id="@+id/add_title_input"
         android:layout_width="200dp"
@@ -30,8 +30,8 @@
         android:inputType="number"
         android:hint="@string/form_amount"/>
     <Button
-        android:id="@+id/add_expense_button"
+        android:id="@+id/add_income_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_expense_button"/>
+        android:text="@string/add_income_button"/>
 </LinearLayout>

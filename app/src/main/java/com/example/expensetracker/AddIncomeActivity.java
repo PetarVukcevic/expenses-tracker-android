@@ -13,9 +13,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-public class AddExpenseActivity extends Activity {
-    private TextView mAddExpenseHeading;
-    private Button mAddExpenseButton;
+public class AddIncomeActivity extends Activity {
+
+    private TextView mAddIncomeHeading;
+    private Button mAddIncomeButton;
     private EditText mAddAmountInput;
     private EditText mTitleInput;
     private EditText mDescriptionInput;
@@ -24,22 +25,22 @@ public class AddExpenseActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense);
-        mAddExpenseHeading = (TextView) findViewById(R.id.add_expenses_heading);
+        setContentView(R.layout.activity_add_income);
+        mAddIncomeHeading = (TextView) findViewById(R.id.add_incomes_heading);
         mTitleInput = (EditText) findViewById(R.id.add_title_input);
         mDescriptionInput = (EditText) findViewById(R.id.add_description_input);
         mAddAmountInput = (EditText) findViewById(R.id.add_amount_input);
-        mAddExpenseButton = (Button) findViewById(R.id.add_expense_button);
+        mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
         // Create an instance of your DatabaseHelper
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
         // Get a reference to the database
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        mAddExpenseButton.setOnClickListener(new View.OnClickListener() {
+        mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertTransaction("expenses", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(), Float.valueOf(mAddAmountInput.getText().toString()), database);
+                insertTransaction("incomes", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(), Float.valueOf(mAddAmountInput.getText().toString()), database);
             }
         });
         // Close the database connection
@@ -66,10 +67,11 @@ public class AddExpenseActivity extends Activity {
         if (rowId != -1) {
             // Insertion successful
             // rowId contains the ID of the newly inserted row
-            Toast.makeText(this, "Expense added successfully!", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(AddExpenseActivity.this, MainActivity.class);
-            startActivity(i);
+            Toast.makeText(this, "Income added successfully!", Toast.LENGTH_SHORT).show();
             System.out.println("Uspjesno opet");
+            System.out.println(values);
+            Intent i = new Intent(AddIncomeActivity.this, MainActivity.class);
+            startActivity(i);
         } else {
             // Insertion failed
             System.out.println("Ne valja kurca");

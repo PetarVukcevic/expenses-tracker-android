@@ -54,6 +54,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, AddIncomeActivity.class);
+                startActivity(i);
+            }
+        });
+
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
