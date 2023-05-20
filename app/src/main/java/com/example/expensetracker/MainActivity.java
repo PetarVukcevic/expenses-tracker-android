@@ -21,18 +21,23 @@ import com.example.expensetracker.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private TextView mHeadingTextView;
-    private DatabaseHelper databaseHelper;
+    private Button mAddExpenseButton;
+    private Button mAddIncomeButton;
 
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHeadingTextView = (TextView) findViewById(R.id.heading);
+        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
+        mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
+        mAddExpenseButton = (Button) findViewById(R.id.add_expense_button);
 
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
@@ -41,7 +46,7 @@ public class MainActivity extends Activity {
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
         // Call the insert method to insert data into the table
-//        insert("incomes", "Salary", "This is my salary", 200.5F, database);
+//        insertTransaction("incomes", "Salary", "This is my salary", 200.5F, database);
 
         // Call the getSumOfAmount method to retrieve the sum
         float sumOfExpenses = getSumOfAmount("expenses", database);
@@ -51,11 +56,11 @@ public class MainActivity extends Activity {
         database.close();
 
         // Set the sum value to the TextView
-        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses));
+        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
     }
 
 
-    public void insert(String table, String title, String description, Float amount, SQLiteDatabase database) {
+    public void insertTransaction(String table, String title, String description, Float amount, SQLiteDatabase database) {
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
