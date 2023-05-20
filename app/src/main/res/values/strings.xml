@@ -10,7 +10,7 @@
     <!--  Add expense/income form  -->
     <string name="form_title">Title</string>
     <string name="form_description">Description</string>
-    <string name="form_amount">Amount</string>
+    <string name="form_amount">Amount(€)</string>
 
 
     <!--  Add Income, Add expense button  -->

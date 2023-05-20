@@ -26,6 +26,7 @@
         android:id="@+id/add_amount_input"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:hint="@string/form_amount"/>
     <Button
         android:id="@+id/add_expense_button"

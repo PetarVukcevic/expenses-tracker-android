@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,7 +34,14 @@ public class AddExpenseActivity extends Activity {
         // Get a reference to the database
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-
+        mAddExpenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertTransaction("expenses", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(), Float.valueOf(mAddAmountInput.getText().toString()), database);
+            }
+        });
+        // Close the database connection
+        database.close();
     }
 
     public void insertTransaction(String table, String title, String description, Float amount, SQLiteDatabase database) {
