@@ -2,6 +2,7 @@ package com.example.expensetracker;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -38,6 +39,20 @@ public class MainActivity extends Activity {
         mHeadingTextView = (TextView) findViewById(R.id.budget_value);
         mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
         mAddExpenseButton = (Button) findViewById(R.id.add_expense_button);
+        mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        mAddExpenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, AddExpenseActivity.class);
+                startActivity(i);
+            }
+        });
 
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
