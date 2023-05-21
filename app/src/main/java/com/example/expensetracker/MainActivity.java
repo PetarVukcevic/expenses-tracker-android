@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
+        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
         mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
         mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
         mRecyclerView = findViewById(R.id.recycler);
@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
 
 
         // Fetch expenses data from the database
-        List<Expense> expenses = getTransactions(database, "expenses");
+        List<Expense> expenses = getTransactions(database);
 
 
         // Call the getSumOfAmount method to retrieve the sum
@@ -84,27 +84,31 @@ public class MainActivity extends Activity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         // Set the sum value to the TextView
-//        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
+        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
     }
 
-    private List<Expense> getTransactions(SQLiteDatabase database, String type) {
+    // For each transaction
+// For each transaction
+    private List<Expense> getTransactions(SQLiteDatabase database) {
         List<Expense> expenses = new ArrayList<>();
 
         // Execute the query to fetch expenses from the "transactions" table
-        String query = "SELECT title, amount FROM transactions WHERE type='" + type + "' ORDER BY created_at DESC";
+        String query = "SELECT title, amount, type FROM transactions ORDER BY created_at DESC";
         Cursor cursor = database.rawQuery(query, null);
 
         try {
             int titleIndex = cursor.getColumnIndexOrThrow("title");
             int amountIndex = cursor.getColumnIndexOrThrow("amount");
+            int typeIndex = cursor.getColumnIndexOrThrow("type");
 
             // Iterate over the cursor to retrieve expense data
             while (cursor.moveToNext()) {
                 String title = cursor.getString(titleIndex);
                 float amount = cursor.getFloat(amountIndex);
+                String type = cursor.getString(typeIndex);
 
                 // Create an Expense object with the retrieved data and add it to the list
-                Expense expense = new Expense(title, amount);
+                Expense expense = new Expense(title, amount, type);
                 expenses.add(expense);
             }
         } catch (IllegalArgumentException e) {
@@ -116,6 +120,7 @@ public class MainActivity extends Activity {
 
         return expenses;
     }
+
 
 
 
