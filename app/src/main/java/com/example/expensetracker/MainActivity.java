@@ -7,29 +7,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.expensetracker.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private TextView mHeadingTextView;
-    private Button mAddExpenseButton;
-    private Button mAddIncomeButton;
+    private TextView mAddExpenseButton;
+    private TextView mAddIncomeButton;
 
     private DatabaseHelper databaseHelper;
 
@@ -37,9 +24,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
-        mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
-        mAddExpenseButton = (Button) findViewById(R.id.add_expense_button);
+//        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
+        mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
+        mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
 
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +43,7 @@ public class MainActivity extends Activity {
                 startActivity(i);
             }
         });
+
 
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +68,7 @@ public class MainActivity extends Activity {
         database.close();
 
         // Set the sum value to the TextView
-        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
+//        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
     }
 
 

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ExpenseTracker</string>
     <string name="action_settings">Settings</string>
+
+
     <string name="heading">Budget: </string>
 
     <!--  Add Income, Add expense button  -->
@@ -12,7 +14,10 @@
     <string name="form_description">Description</string>
     <string name="form_amount">Amount(€)</string>
 
-
+    <!--  List of incomes and expenses  -->
+    <string name="incomes_label">Incomes</string>
+    <string name="expenses_label">Expenses</string>
+    
     <!--  Add Income, Add expense button  -->
     <string name="add_income_button">Add Income</string>
     <string name="add_expense_button">Add Expense</string>
