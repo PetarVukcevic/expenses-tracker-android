@@ -70,12 +70,12 @@ public class MainActivity extends Activity {
 
 
         // Fetch expenses data from the database
-        List<Expense> expenses = getExpenses(database);
+        List<Expense> expenses = getTransactions(database, "expenses");
 
 
         // Call the getSumOfAmount method to retrieve the sum
-        float sumOfExpenses = getSumOfAmount("expenses", database);
-        float sumOfIncomes = getSumOfAmount("incomes", database);
+        float sumOfExpenses = getSumOfAmount("transactions", "expenses",database);
+        float sumOfIncomes = getSumOfAmount("transactions", "incomes",database);
 
         // Close the database connection
         database.close();
@@ -87,35 +87,44 @@ public class MainActivity extends Activity {
 //        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
     }
 
-    private List<Expense> getExpenses(SQLiteDatabase database) {
+    private List<Expense> getTransactions(SQLiteDatabase database, String type) {
         List<Expense> expenses = new ArrayList<>();
 
-        // Execute the query to fetch expenses from the "expenses" table
-        String query = "SELECT title, amount FROM expenses ORDER BY created_at DESC";
+        // Execute the query to fetch expenses from the "transactions" table
+        String query = "SELECT title, amount FROM transactions WHERE type='" + type + "' ORDER BY created_at DESC";
         Cursor cursor = database.rawQuery(query, null);
 
-        // Iterate over the cursor to retrieve expense data
-        while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndex("title"));
-            float amount = cursor.getFloat(cursor.getColumnIndex("amount"));
+        try {
+            int titleIndex = cursor.getColumnIndexOrThrow("title");
+            int amountIndex = cursor.getColumnIndexOrThrow("amount");
 
-            // Create an Expense object with the retrieved data and add it to the list
-            Expense expense = new Expense(title, amount);
-            expenses.add(expense);
+            // Iterate over the cursor to retrieve expense data
+            while (cursor.moveToNext()) {
+                String title = cursor.getString(titleIndex);
+                float amount = cursor.getFloat(amountIndex);
+
+                // Create an Expense object with the retrieved data and add it to the list
+                Expense expense = new Expense(title, amount);
+                expenses.add(expense);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e("MainActivity", "Error retrieving expenses: " + e.getMessage());
+        } finally {
+            // Close the cursor
+            cursor.close();
         }
-
-        // Close the cursor
-        cursor.close();
 
         return expenses;
     }
 
-    public float getSumOfAmount(String tableName, SQLiteDatabase database) {
+
+
+    public float getSumOfAmount(String tableName, String type, SQLiteDatabase database) {
         // Define the column to sum
         String columnToSum = "amount";
 
         // Execute the query to calculate the sum
-        String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName;
+        String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName + " WHERE type='" + type + "'";
         Cursor cursor = database.rawQuery(query, null);
 
         // Retrieve the sum value from the cursor
@@ -130,27 +139,5 @@ public class MainActivity extends Activity {
         return totalAmount;
     }
 
-    public void insertCategory(String name) {
-
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-
-        long rowId = db.insert("categories", null, values);
-
-        if (rowId != -1) {
-            // Insertion successful
-            // rowId contains the ID of the newly inserted row
-            Log.d("DatabaseHelper", "Category inserted successfully!");
-        } else {
-            // Insertion failed
-            Log.d("DatabaseHelper", "Failed to insert category!");
-        }
-
-        db.close();
-    }
 
 }

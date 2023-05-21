@@ -4,10 +4,10 @@
 
 
     <string name="heading">Budget: </string>
-
+    <string name="category">Category</string>
     <!--  Add Income, Add expense button  -->
-    <string name="add_incomes_heading">Add new Incomes</string>
-    <string name="add_expenses_heading">Add new Expenses</string>
+    <string name="add_incomes_heading">Add new Income</string>
+    <string name="add_expenses_heading">Add new Expense</string>
 
     <!--  Add expense/income form  -->
     <string name="form_title">Title</string>

@@ -24,6 +24,7 @@ public class AddIncomeActivity extends Activity {
     private EditText mAddAmountInput;
     private EditText mTitleInput;
     private EditText mDescriptionInput;
+    private EditText mAddCategoryInput;
 
 
     @Override
@@ -35,6 +36,9 @@ public class AddIncomeActivity extends Activity {
         mDescriptionInput = (EditText) findViewById(R.id.add_description_input);
         mAddAmountInput = (EditText) findViewById(R.id.add_amount_input);
         mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
+        mAddCategoryInput = findViewById(R.id.add_category_input);
+
+
         // Create an instance of your DatabaseHelper
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
@@ -48,7 +52,7 @@ public class AddIncomeActivity extends Activity {
                 String title = mTitleInput.getText().toString();
                 String description = mDescriptionInput.getText().toString();
                 String amountText = mAddAmountInput.getText().toString().trim();
-
+                String category = mAddCategoryInput.getText().toString();
                 // Perform validation
                 if (title.isEmpty()) {
                     mTitleInput.setError("Please enter a title");
@@ -65,6 +69,11 @@ public class AddIncomeActivity extends Activity {
                     return;
                 }
 
+                if (category.isEmpty()) {
+                    mAddAmountInput.setError("Please enter a category");
+                    return;
+                }
+
                 float amount;
                 try {
                     amount = Float.parseFloat(amountText);
@@ -72,14 +81,14 @@ public class AddIncomeActivity extends Activity {
                     mAddAmountInput.setError("Invalid amount format");
                     return;
                 }
-                insertTransaction("incomes", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(), Float.valueOf(mAddAmountInput.getText().toString()), database);
+                insertTransaction("transactions", mTitleInput.getText().toString(), mDescriptionInput.getText().toString(),mAddCategoryInput.getText().toString() , Float.valueOf(mAddAmountInput.getText().toString()), "incomes",database);
             }
         });
         // Close the database connection
         database.close();
     }
 
-    public void insertTransaction(String table, String title, String description, Float amount, SQLiteDatabase database) {
+    public void insertTransaction(String table, String title, String description, String category, Float amount, String type, SQLiteDatabase database) {
         // Create an instance of your DatabaseHelper
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
@@ -88,28 +97,33 @@ public class AddIncomeActivity extends Activity {
 
         // Create a ContentValues object to hold the values you want to insert
         ContentValues values = new ContentValues();
+        values.put("category", category);
         values.put("title", title);
         values.put("description", description);
         values.put("amount", amount);
         values.put("created_at", System.currentTimeMillis());
-
+        values.put("type", type);
         // Insert the values into the table
         long rowId = database.insert(table, null, values);
 
         if (rowId != -1) {
             // Insertion successful
             // rowId contains the ID of the newly inserted row
-            Toast.makeText(this, "Income added successfully!", Toast.LENGTH_SHORT).show();
-            System.out.println("Uspjesno opet");
-            System.out.println(values);
+            if (type.equals("expenses")) {
+                Toast.makeText(this, "Expense added successfully!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Income added successfully!", Toast.LENGTH_SHORT).show();
+
+            }
             Intent i = new Intent(AddIncomeActivity.this, MainActivity.class);
             startActivity(i);
+            System.out.println("Successfully inserted expense");
         } else {
             // Insertion failed
-            System.out.println("Ne valja kurca");
-
+            System.out.println("Failed to insert expense");
         }
+
         database.close();
     }
-
 }
