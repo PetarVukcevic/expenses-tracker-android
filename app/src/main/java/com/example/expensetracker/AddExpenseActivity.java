@@ -98,12 +98,61 @@ public class AddExpenseActivity extends Activity {
                     mAddAmountInput.setError("Invalid amount format");
                     return;
                 }
+
+                // Calculate the budget
+                float budget = calculateBudget(database);
+
+                // Check if the expense can be added
+                if (amount > budget) {
+                    Toast.makeText(AddExpenseActivity.this, "Not enough budget for this expense", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 
                 // Insert the expense into the database
                 insertTransaction("expenses", categoryId, title, description, amount, database);
             }
         });
     }
+
+    private float calculateBudget(SQLiteDatabase database) {
+        // Create an instance of your DatabaseHelper
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+
+        // Get a reference to the database
+        database = databaseHelper.getReadableDatabase();
+
+        // Query to get the total incomes
+        String incomeQuery = "SELECT SUM(amount) AS total_income FROM incomes";
+        Cursor incomeCursor = database.rawQuery(incomeQuery, null);
+        float totalIncome = 0;
+
+        if (incomeCursor.moveToFirst()) {
+            int totalIncomeIndex = incomeCursor.getColumnIndex("total_income");
+            if (totalIncomeIndex >= 0) {
+                totalIncome = incomeCursor.getFloat(totalIncomeIndex);
+            }
+        }
+
+        // Query to get the total expenses
+        String expenseQuery = "SELECT SUM(amount) AS total_expense FROM expenses";
+        Cursor expenseCursor = database.rawQuery(expenseQuery, null);
+        float totalExpense = 0;
+
+        if (expenseCursor.moveToFirst()) {
+            int totalExpenseIndex = expenseCursor.getColumnIndex("total_expense");
+            if (totalExpenseIndex >= 0) {
+                totalExpense = expenseCursor.getFloat(totalExpenseIndex);
+            }
+        }
+
+        // Close the cursors
+        incomeCursor.close();
+        expenseCursor.close();
+
+        // Calculate the budget
+        return totalIncome - totalExpense;
+    }
+
 
     private Map<String, Integer> getCategories(SQLiteDatabase database) {
         Map<String, Integer> categories = new HashMap<>();
