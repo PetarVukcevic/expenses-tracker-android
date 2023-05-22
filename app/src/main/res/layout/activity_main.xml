@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Budget"
+            android:text=""
             android:textColor="@color/blue_normal"
             android:textSize="24sp"
             android:textStyle="bold"

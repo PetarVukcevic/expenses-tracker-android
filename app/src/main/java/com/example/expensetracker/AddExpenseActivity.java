@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class AddExpenseActivity extends Activity {
     private TextView mAddExpenseHeading;
-    private Button mAddExpenseButton;
+    private TextView mAddExpenseButton;
     private EditText mAddAmountInput;
     private EditText mTitleInput;
     private EditText mDescriptionInput;

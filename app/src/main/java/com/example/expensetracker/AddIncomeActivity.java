@@ -20,7 +20,7 @@ import java.util.List;
 public class AddIncomeActivity extends Activity {
 
     private TextView mAddIncomeHeading;
-    private Button mAddIncomeButton;
+    private TextView mAddIncomeButton;
     private EditText mAddAmountInput;
     private EditText mTitleInput;
     private EditText mDescriptionInput;
@@ -35,7 +35,7 @@ public class AddIncomeActivity extends Activity {
         mTitleInput = (EditText) findViewById(R.id.add_title_input);
         mDescriptionInput = (EditText) findViewById(R.id.add_description_input);
         mAddAmountInput = (EditText) findViewById(R.id.add_amount_input);
-        mAddIncomeButton = (Button) findViewById(R.id.add_income_button);
+        mAddIncomeButton = (TextView) findViewById(R.id.add_income_button);
         mAddCategoryInput = findViewById(R.id.add_category_input);
 
 
