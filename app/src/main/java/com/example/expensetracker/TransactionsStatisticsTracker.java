@@ -1,5 +1,7 @@
 package com.example.expensetracker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +48,7 @@ public class TransactionsStatisticsTracker extends RecyclerView.Adapter<Transact
         transactionList = transactions;
     }
 
-    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
+    public class TransactionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView titleTextView;
         public TextView amountTextView;
         private TextView categoryTextView;
@@ -58,6 +60,9 @@ public class TransactionsStatisticsTracker extends RecyclerView.Adapter<Transact
             amountTextView = itemView.findViewById(R.id.amountTextView);
             categoryTextView = itemView.findViewById(R.id.categoryTextView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
+
+            // Set the click listener on the itemView
+            itemView.setOnClickListener(this);
         }
 
         public void bindData(String title, String amount, String type, String category, String date) {
@@ -75,5 +80,19 @@ public class TransactionsStatisticsTracker extends RecyclerView.Adapter<Transact
                 amountTextView.setText(amount + "€");
             }
         }
+
+        @Override
+        public void onClick(View view) {
+            // Get the clicked transaction
+            int position = getAdapterPosition();
+            Transaction transaction = transactionList.get(position);
+
+            // Create an intent to open the TransactionDetailsActivity
+            Context context = view.getContext();
+            Intent intent = new Intent(context, TransactionDetailsActivity.class);
+            intent.putExtra("transaction", transaction); // Pass the transaction object to the activity
+            context.startActivity(intent);
+        }
+
     }
 }
