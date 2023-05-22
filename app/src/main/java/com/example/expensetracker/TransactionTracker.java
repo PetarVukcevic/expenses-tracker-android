@@ -1,5 +1,6 @@
 package com.example.expensetracker;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ public class TransactionTracker extends RecyclerView.Adapter<TransactionTracker.
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_item, parent, false);
-        return new TransactionViewHolder(itemView);
+        return new TransactionViewHolder(itemView, transactionList);
     }
 
     @Override
@@ -38,7 +39,6 @@ public class TransactionTracker extends RecyclerView.Adapter<TransactionTracker.
         holder.bindData(title, amount, type, category, date);
     }
 
-
     @Override
     public int getItemCount() {
         return transactionList.size();
@@ -49,16 +49,31 @@ public class TransactionTracker extends RecyclerView.Adapter<TransactionTracker.
         public TextView amountTextView;
         private TextView categoryTextView;
         private TextView dateTextView;
+        private List<Transaction> transactionList;
 
-        public TransactionViewHolder(View itemView) {
+        public TransactionViewHolder(View itemView, List<Transaction> transactionList) {
             super(itemView);
+            this.transactionList = transactionList;
             titleTextView = itemView.findViewById(R.id.titleTextView);
             amountTextView = itemView.findViewById(R.id.amountTextView);
             categoryTextView = itemView.findViewById(R.id.categoryTextView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Transaction transaction = transactionList.get(position);
+                        // Handle the click event for the transaction
+                        // For example, you can start a new activity to show transaction details
+                        Intent intent = new Intent(itemView.getContext(), TransactionDetailsActivity.class);
+                        intent.putExtra("transaction", transaction);
+                        itemView.getContext().startActivity(intent);
+                    }
+                }
+            });
         }
-
-
 
         public void bindData(String title, String amount, String type, String category, String date) {
             titleTextView.setText(title);
@@ -68,21 +83,16 @@ public class TransactionTracker extends RecyclerView.Adapter<TransactionTracker.
                 if (type.equals("incomes")) {
                     amountTextView.setText("+" + amount + " €");
                     amountTextView.setTextColor(Color.GREEN); // Set text color to green for incomes
-//                    titleTextView.setTextColor(Color.GREEN);
                 } else {
                     amountTextView.setText("-" + amount + " €");
-                    amountTextView.setTextColor(Color.RED); // Set text color to red for outcomes
-//                    titleTextView.setTextColor(Color.RED);
-
+                    amountTextView.setTextColor(Color.RED); // Set text color to red for expenses
                 }
-            }
-            else {
+            } else {
                 // Handle null type value here
                 amountTextView.setText(amount + "€");
                 amountTextView.setTextColor(Color.BLACK); // Set default text color
             }
         }
-
-
     }
 }
+

@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 
 
         // Fetch expenses data from the database
-        List<Transaction> expens = getTransactions(database);
+        List<Transaction> transactions = getTransactions(database);
 
 
         // Call the getSumOfAmount method to retrieve the sum
@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
         // Close the database connection
         database.close();
         // Initialize the RecyclerView and its adapter
-        mAdapter = new TransactionTracker(expens);
+        mAdapter = new TransactionTracker(transactions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         // Set the sum value to the TextView
@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
     // For each transaction
 // For each transaction
     private List<Transaction> getTransactions(SQLiteDatabase database) {
-        List<Transaction> expens = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
 
         // Execute the query to fetch expenses from the "transactions" table
         String query = "SELECT * FROM transactions ORDER BY created_at DESC";
@@ -101,6 +101,7 @@ public class MainActivity extends Activity {
             int typeIndex = cursor.getColumnIndexOrThrow("type");
             int categoryIndex = cursor.getColumnIndexOrThrow("category");
             int dateIndex = cursor.getColumnIndexOrThrow("created_at");
+            int descriptionIndex = cursor.getColumnIndexOrThrow("description");
 
             // Iterate over the cursor to retrieve expense data
             while (cursor.moveToNext()) {
@@ -109,6 +110,7 @@ public class MainActivity extends Activity {
                 String type = cursor.getString(typeIndex);
                 String category = cursor.getString(categoryIndex);
                 String date = cursor.getString(dateIndex);
+                String description = cursor.getString(descriptionIndex);
 
                 // Convert the date string to a timestamp
                 long timestamp = Long.parseLong(date);
@@ -118,7 +120,8 @@ public class MainActivity extends Activity {
 
                 // Create an Expense object with the retrieved data and add it to the list
                 Transaction transaction = new Transaction(title, amount, type, category, relativeTime.toString());
-                expens.add(transaction);
+                transaction.setDescription(description);
+                transactions.add(transaction);
             }
         } catch (IllegalArgumentException e) {
             Log.e("MainActivity", "Error retrieving expenses: " + e.getMessage());
@@ -127,7 +130,7 @@ public class MainActivity extends Activity {
             cursor.close();
         }
 
-        return expens;
+        return transactions;
     }
 
 

@@ -1,11 +1,14 @@
 package com.example.expensetracker;
 
-public class Transaction {
+import java.io.Serializable;
+
+public class Transaction implements Serializable {
     private String title;
     private float amount;
     private String category;
     private String type;
     private String date;
+    private String description;
 
     public Transaction(String title, float amount, String type, String category, String date) {
         this.title = title;
@@ -13,6 +16,23 @@ public class Transaction {
         this.type = type;
         this.category = category;
         this.date = date;
+    }
+
+    public Transaction(String title, float amount, String category, String type, String date, String description) {
+        this.title = title;
+        this.amount = amount;
+        this.category = category;
+        this.type = type;
+        this.date = date;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDate() {
