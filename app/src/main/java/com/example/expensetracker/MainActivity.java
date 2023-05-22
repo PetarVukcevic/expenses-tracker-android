@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.text.format.DateUtils;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expensetracker.databinding.ActivityMainBinding;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -124,8 +126,13 @@ public class MainActivity extends Activity {
         // Increase text size for entry labels
         pieChart.setEntryLabelColor(Color.BLACK);
         pieChart.setEntryLabelTextSize(14f); // Adjust the size as needed
+        pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD); // Set the typeface to bold
         pieData.setValueTextSize(20f);
+        pieData.setValueTypeface(Typeface.DEFAULT_BOLD);
         pieChart.getDescription().setEnabled(false);
+
+        Legend legend = pieChart.getLegend();
+        legend.setTextSize(16f); // Set the desired text size for the legend
     }
 
 
