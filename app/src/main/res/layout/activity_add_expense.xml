@@ -61,7 +61,7 @@
             android:textSize="16sp"
             android:text="@string/add_expense_button"
             android:paddingVertical="10dp"
-            android:paddingHorizontal="60dp"
+            android:paddingHorizontal="55dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
