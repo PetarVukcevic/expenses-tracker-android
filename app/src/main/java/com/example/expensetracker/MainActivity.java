@@ -19,9 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +46,6 @@ public class MainActivity extends Activity {
         mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
         mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
         mRecyclerView = findViewById(R.id.recycler);
-
-        mHeadingTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, IncomesStatisticsActivity.class);
-                startActivity(intent);
-            }
-        });
 
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +131,33 @@ public class MainActivity extends Activity {
         pieData.setValueTextSize(20f);
         pieData.setValueTypeface(Typeface.DEFAULT_BOLD);
         pieChart.getDescription().setEnabled(false);
+
+        // Set onClick listener for the pie chart
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry entry, Highlight highlight) {
+                int index = (int) highlight.getX();
+
+                if (index >= 0 && index < pieEntryList.size()) {
+                    PieEntry selectedEntry = pieEntryList.get(index);
+                    String label = selectedEntry.getLabel();
+
+                    if (label.equals("Incomes(%)")) {
+                        Intent intent = new Intent(MainActivity.this, IncomesStatisticsActivity.class);
+                        startActivity(intent);
+                    } else if (label.equals("Expenses(%)")) {
+                        Intent intent = new Intent(MainActivity.this, ExpensesStatisticsActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+                // Do nothing
+            }
+        });
+
 
         Legend legend = pieChart.getLegend();
         legend.setTextSize(16f); // Set the desired text size for the legend

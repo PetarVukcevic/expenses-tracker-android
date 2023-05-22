@@ -26,6 +26,7 @@
         <activity android:name=".AddExpenseActivity"/>
         <activity android:name=".TransactionDetailsActivity"/>
         <activity android:name=".IncomesStatisticsActivity"/>
+        <activity android:name=".ExpensesStatisticsActivity"/>
     </application>
 
 </manifest>

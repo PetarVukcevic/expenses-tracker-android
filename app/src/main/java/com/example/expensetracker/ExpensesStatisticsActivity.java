@@ -21,7 +21,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class IncomesStatisticsActivity extends Activity {
+public class ExpensesStatisticsActivity extends Activity {
+
     private RecyclerView mRecyclerView;
     private DatabaseHelper databaseHelper;
     private TransactionsStatisticsTracker mAdapter;
@@ -37,11 +38,11 @@ public class IncomesStatisticsActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.incomes_stats_activity);
+        setContentView(R.layout.expenses_stats_activity);
         mRecyclerView = findViewById(R.id.recycler);
         timeFilterSpinner = findViewById(R.id.timeFilterSpinner);
         titleTextView = findViewById(R.id.titleTextView);
-        
+
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
@@ -56,14 +57,14 @@ public class IncomesStatisticsActivity extends Activity {
 
         // Close the database connection
         database.close();
-        
+
         // Initialize the RecyclerView and its adapter
         mAdapter = new TransactionsStatisticsTracker(transactions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private float calculateIncomeSum(List<Transaction> transactions) {
+    private float calculateExpenseSum(List<Transaction> transactions) {
         float sum = 0;
         for (Transaction transaction : transactions) {
             sum += transaction.getAmount();
@@ -131,11 +132,11 @@ public class IncomesStatisticsActivity extends Activity {
         database.close();
 
         // Calculate the sum of income transactions
-        float sum = calculateIncomeSum(transactions);
+        float sum = calculateExpenseSum(transactions);
 
         // Update the titleTextView based on the selected time filter and the sum of income transactions
         TextView titleTextView = findViewById(R.id.titleTextView);
-        String title = "Incomes: " + sum + "€";
+        String title = "Expenses: " + sum + "€";
         titleTextView.setText(title);
 
         // Update the RecyclerView adapter with the new transactions
@@ -147,7 +148,7 @@ public class IncomesStatisticsActivity extends Activity {
         List<Transaction> transactions = new ArrayList<>();
 
         // Build the query to fetch expenses from the "transactions" table
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM transactions WHERE type='incomes'");
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM transactions WHERE type='expenses'");
         if (startTime != null && endTime != null) {
             queryBuilder.append(" AND created_at >= ").append(startTime).append(" AND created_at <= ").append(endTime);
         }

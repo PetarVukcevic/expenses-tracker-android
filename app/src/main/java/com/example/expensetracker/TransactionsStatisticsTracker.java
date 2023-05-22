@@ -1,5 +1,6 @@
 package com.example.expensetracker;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class TransactionsStatisticsTracker extends RecyclerView.Adapter<Transact
                     amountTextView.setText("+" + amount + " €");
                 } else {
                     amountTextView.setText("-" + amount + " €");
+                    amountTextView.setTextColor(Color.RED);
                 }
             } else {
                 amountTextView.setText(amount + "€");
