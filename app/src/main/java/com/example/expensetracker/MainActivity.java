@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    ActivityMainBinding binding;
     private TextView mHeadingTextView;
     private TextView mAddExpenseButton;
     private TextView mAddIncomeButton;
@@ -45,7 +44,15 @@ public class MainActivity extends Activity {
         mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
         mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
         mRecyclerView = findViewById(R.id.recycler);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        mHeadingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, TransactionsStatisticsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
