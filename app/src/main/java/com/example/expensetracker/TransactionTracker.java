@@ -12,45 +12,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
-    private List<Expense> expenseList;
+public class TransactionTracker extends RecyclerView.Adapter<TransactionTracker.TransactionViewHolder> {
+    private List<Transaction> transactionList;
 
-    public ExpenseAdapter(List<Expense> expenseList) {
-        this.expenseList = expenseList;
+    public TransactionTracker(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 
     @NonNull
     @Override
-    public ExpenseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.expense_item, parent, false);
-        return new ExpenseViewHolder(itemView);
+                .inflate(R.layout.transaction_item, parent, false);
+        return new TransactionViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExpenseViewHolder holder, int position) {
-        Expense expense = expenseList.get(position);
-        String title = expense.getTitle();
-        String amount = String.valueOf(expense.getAmount());
-        String type = expense.getType();
-        String category = expense.getCategory();
-        String date = expense.getDate();
+    public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
+        Transaction transaction = transactionList.get(position);
+        String title = transaction.getTitle();
+        String amount = String.valueOf(transaction.getAmount());
+        String type = transaction.getType();
+        String category = transaction.getCategory();
+        String date = transaction.getDate();
         holder.bindData(title, amount, type, category, date);
     }
 
 
     @Override
     public int getItemCount() {
-        return expenseList.size();
+        return transactionList.size();
     }
 
-    public static class ExpenseViewHolder extends RecyclerView.ViewHolder {
+    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView amountTextView;
         private TextView categoryTextView;
         private TextView dateTextView;
 
-        public ExpenseViewHolder(View itemView) {
+        public TransactionViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             amountTextView = itemView.findViewById(R.id.amountTextView);

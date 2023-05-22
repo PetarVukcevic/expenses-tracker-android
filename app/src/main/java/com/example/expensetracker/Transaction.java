@@ -1,13 +1,13 @@
 package com.example.expensetracker;
 
-public class Expense {
+public class Transaction {
     private String title;
     private float amount;
     private String category;
     private String type;
     private String date;
 
-    public Expense(String title, float amount, String type, String category, String date) {
+    public Transaction(String title, float amount, String type, String category, String date) {
         this.title = title;
         this.amount = amount;
         this.type = type;

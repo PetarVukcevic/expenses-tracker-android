@@ -5,20 +5,20 @@
 
     <string name="heading">Budget: </string>
     <string name="category">Category</string>
-    <!--  Add Income, Add expense button  -->
+    <!--  Add Income, Add transaction button  -->
     <string name="add_incomes_heading">Add new Income</string>
     <string name="add_expenses_heading">Add new Expense</string>
 
-    <!--  Add expense/income form  -->
+    <!--  Add transaction/income form  -->
     <string name="form_title">Title</string>
     <string name="form_description">Description</string>
     <string name="form_amount">Amount(€)</string>
 
-    <!--  List of incomes and expenses  -->
+    <!--  List of incomes and expens  -->
     <string name="incomes_label">Incomes</string>
     <string name="expenses_label">Expenses</string>
     
-    <!--  Add Income, Add expense button  -->
+    <!--  Add Income, Add transaction button  -->
     <string name="add_income_button">Add Income</string>
     <string name="add_expense_button">Add Expense</string>
 

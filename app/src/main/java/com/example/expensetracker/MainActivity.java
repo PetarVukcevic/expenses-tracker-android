@@ -1,7 +1,6 @@
 package com.example.expensetracker;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,7 +10,6 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +25,7 @@ public class MainActivity extends Activity {
 
     private DatabaseHelper databaseHelper;
     private RecyclerView mRecyclerView;
-    private ExpenseAdapter mAdapter;
+    private TransactionTracker mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class MainActivity extends Activity {
 
 
         // Fetch expenses data from the database
-        List<Expense> expenses = getTransactions(database);
+        List<Transaction> expens = getTransactions(database);
 
 
         // Call the getSumOfAmount method to retrieve the sum
@@ -81,7 +79,7 @@ public class MainActivity extends Activity {
         // Close the database connection
         database.close();
         // Initialize the RecyclerView and its adapter
-        mAdapter = new ExpenseAdapter(expenses);
+        mAdapter = new TransactionTracker(expens);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         // Set the sum value to the TextView
@@ -90,8 +88,8 @@ public class MainActivity extends Activity {
 
     // For each transaction
 // For each transaction
-    private List<Expense> getTransactions(SQLiteDatabase database) {
-        List<Expense> expenses = new ArrayList<>();
+    private List<Transaction> getTransactions(SQLiteDatabase database) {
+        List<Transaction> expens = new ArrayList<>();
 
         // Execute the query to fetch expenses from the "transactions" table
         String query = "SELECT * FROM transactions ORDER BY created_at DESC";
@@ -119,8 +117,8 @@ public class MainActivity extends Activity {
                 CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(timestamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
 
                 // Create an Expense object with the retrieved data and add it to the list
-                Expense expense = new Expense(title, amount, type, category, relativeTime.toString());
-                expenses.add(expense);
+                Transaction transaction = new Transaction(title, amount, type, category, relativeTime.toString());
+                expens.add(transaction);
             }
         } catch (IllegalArgumentException e) {
             Log.e("MainActivity", "Error retrieving expenses: " + e.getMessage());
@@ -129,7 +127,7 @@ public class MainActivity extends Activity {
             cursor.close();
         }
 
-        return expenses;
+        return expens;
     }
 
 
