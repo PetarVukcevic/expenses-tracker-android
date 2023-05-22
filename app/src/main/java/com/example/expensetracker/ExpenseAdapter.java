@@ -33,7 +33,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         String title = expense.getTitle();
         String amount = String.valueOf(expense.getAmount());
         String type = expense.getType();
-        holder.bindData(title, amount, type);
+        String category = expense.getCategory();
+        String date = expense.getDate();
+        holder.bindData(title, amount, type, category, date);
     }
 
 
@@ -45,27 +47,32 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     public static class ExpenseViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView amountTextView;
+        private TextView categoryTextView;
+        private TextView dateTextView;
 
         public ExpenseViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             amountTextView = itemView.findViewById(R.id.amountTextView);
+            categoryTextView = itemView.findViewById(R.id.categoryTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
         }
 
 
 
-        public void bindData(String title, String amount, String type) {
+        public void bindData(String title, String amount, String type, String category, String date) {
             titleTextView.setText(title);
-
+            categoryTextView.setText(category);
+            dateTextView.setText(date);
             if (type != null) {
                 if (type.equals("incomes")) {
-                    amountTextView.setText("+" + amount + "€");
+                    amountTextView.setText("+" + amount + " €");
                     amountTextView.setTextColor(Color.GREEN); // Set text color to green for incomes
-                    titleTextView.setTextColor(Color.GREEN);
+//                    titleTextView.setTextColor(Color.GREEN);
                 } else {
-                    amountTextView.setText("-" + amount + "€");
+                    amountTextView.setText("-" + amount + " €");
                     amountTextView.setTextColor(Color.RED); // Set text color to red for outcomes
-                    titleTextView.setTextColor(Color.RED);
+//                    titleTextView.setTextColor(Color.RED);
 
                 }
             }

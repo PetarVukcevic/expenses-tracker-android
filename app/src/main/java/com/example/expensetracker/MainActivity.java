@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -93,22 +94,32 @@ public class MainActivity extends Activity {
         List<Expense> expenses = new ArrayList<>();
 
         // Execute the query to fetch expenses from the "transactions" table
-        String query = "SELECT title, amount, type FROM transactions ORDER BY created_at DESC";
+        String query = "SELECT * FROM transactions ORDER BY created_at DESC";
         Cursor cursor = database.rawQuery(query, null);
 
         try {
             int titleIndex = cursor.getColumnIndexOrThrow("title");
             int amountIndex = cursor.getColumnIndexOrThrow("amount");
             int typeIndex = cursor.getColumnIndexOrThrow("type");
+            int categoryIndex = cursor.getColumnIndexOrThrow("category");
+            int dateIndex = cursor.getColumnIndexOrThrow("created_at");
 
             // Iterate over the cursor to retrieve expense data
             while (cursor.moveToNext()) {
                 String title = cursor.getString(titleIndex);
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
+                String category = cursor.getString(categoryIndex);
+                String date = cursor.getString(dateIndex);
+
+                // Convert the date string to a timestamp
+                long timestamp = Long.parseLong(date);
+
+                // Format the timestamp as a relative time string
+                CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(timestamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
 
                 // Create an Expense object with the retrieved data and add it to the list
-                Expense expense = new Expense(title, amount, type);
+                Expense expense = new Expense(title, amount, type, category, relativeTime.toString());
                 expenses.add(expense);
             }
         } catch (IllegalArgumentException e) {
