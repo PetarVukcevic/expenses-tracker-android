@@ -1,6 +1,13 @@
 package com.example.expensetracker;
 
+import android.text.format.DateUtils;
+
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Transaction implements Serializable {
     private String title;
@@ -61,5 +68,42 @@ public class Transaction implements Serializable {
 
     public String getType() {
         return type;
+    }
+
+    public String convertRelativeDate(String relativeDate) {
+        // Parse the relative date and extract the numeric value and unit
+        String[] parts = relativeDate.split(" ");
+        int value = Integer.parseInt(parts[0]);
+        String unit = parts[1];
+
+        // Calculate the actual date based on the relative time
+        LocalDate currentDate = LocalDate.now();
+        LocalDate convertedDate;
+
+        switch (unit) {
+            case "day":
+            case "days":
+                convertedDate = currentDate.minusDays(value);
+                break;
+            case "week":
+            case "weeks":
+                convertedDate = currentDate.minusWeeks(value);
+                break;
+            case "month":
+            case "months":
+                convertedDate = currentDate.minusMonths(value);
+                break;
+            case "year":
+            case "years":
+                convertedDate = currentDate.minusYears(value);
+                break;
+            default:
+                System.out.println("Invalid unit: " + unit);
+                return "";
+        }
+
+        // Format the converted date as "dd/mm/yyyy"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return convertedDate.format(formatter);
     }
 }

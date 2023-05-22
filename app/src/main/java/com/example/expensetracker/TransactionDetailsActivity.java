@@ -28,7 +28,8 @@ public class TransactionDetailsActivity extends Activity {
             mTitleTextView.setText(transaction.getTitle());
             mAmountTextView.setText(String.valueOf(transaction.getAmount()));
             mCategoryTextView.setText(transaction.getCategory());
-            mDateTextView.setText(transaction.getDate());
+            // Display the formatted date
+            mDateTextView.setText((transaction.getDate()));
             mDescriptionTextView.setText(transaction.getDescription());
         }
     }

@@ -1,45 +1,118 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/titleLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentStart="true"/>
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/titleLabelTextView"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/amountLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount:"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"/>
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/titleLabelTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/amountTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/amountLabelTextView"
+        android:layout_below="@id/titleTextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/categoryLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/amountLabelTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/categoryTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/categoryLabelTextView"
+        android:layout_below="@id/amountTextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/dateLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/categoryLabelTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/dateLabelTextView"
+        android:layout_below="@id/categoryTextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/descriptionLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/dateLabelTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/descriptionTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/descriptionLabelTextView"
+        android:layout_below="@id/dateTextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"/>
 
-
-
-</LinearLayout>
+</RelativeLayout>

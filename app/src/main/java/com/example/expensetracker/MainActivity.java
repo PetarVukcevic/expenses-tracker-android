@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.text.format.DateUtils;
@@ -15,10 +16,17 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.expensetracker.databinding.ActivityMainBinding;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    ActivityMainBinding binding;
     private TextView mHeadingTextView;
     private TextView mAddExpenseButton;
     private TextView mAddIncomeButton;
@@ -31,11 +39,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHeadingTextView = (TextView) findViewById(R.id.budget_value);
+        mHeadingTextView = (TextView) findViewById(R.id.budgetTextView);
         mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
         mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
         mRecyclerView = findViewById(R.id.recycler);
-
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +84,8 @@ public class MainActivity extends Activity {
         float sumOfExpenses = getSumOfAmount("transactions", "expenses",database);
         float sumOfIncomes = getSumOfAmount("transactions", "incomes",database);
 
+        setUpGraph(database);
+
         // Close the database connection
         database.close();
         // Initialize the RecyclerView and its adapter
@@ -83,8 +93,41 @@ public class MainActivity extends Activity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         // Set the sum value to the TextView
-        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses) + "€");
+        mHeadingTextView.setText("Budget: " + Float.toString(sumOfIncomes - sumOfExpenses) + "€");
+        
     }
+
+    private void setUpGraph(SQLiteDatabase database) {
+        List<PieEntry> pieEntryList = new ArrayList<>();
+        List<Integer> colorsList = new ArrayList<>();
+        float income = getSumOfAmount("transactions", "incomes", database);
+        float expense = getSumOfAmount("transactions", "expenses", database);
+
+        if (income != 0) {
+            float incomePercentage = (income / (income + expense)) * 100;
+            pieEntryList.add(new PieEntry(incomePercentage, "Incomes(%)"));
+            colorsList.add(getResources().getColor(R.color.green));
+        }
+        if (expense != 0) {
+            float expensePercentage = (expense / (income + expense)) * 100;
+            pieEntryList.add(new PieEntry(expensePercentage, "Expenses(%)"));
+            colorsList.add(getResources().getColor(R.color.red));
+        }
+        PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
+        pieDataSet.setColors(colorsList);
+        PieData pieData = new PieData(pieDataSet);
+
+        PieChart pieChart = findViewById(R.id.pieChart);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+
+        // Increase text size for entry labels
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setEntryLabelTextSize(14f); // Adjust the size as needed
+        pieData.setValueTextSize(20f);
+        pieChart.getDescription().setEnabled(false);
+    }
+
 
     // For each transaction
 // For each transaction
