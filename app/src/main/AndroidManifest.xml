@@ -25,7 +25,7 @@
         <activity android:name=".AddIncomeActivity"/>
         <activity android:name=".AddExpenseActivity"/>
         <activity android:name=".TransactionDetailsActivity"/>
-        <activity android:name=".TransactionsStatisticsActivity"/>
+        <activity android:name=".IncomesStatisticsActivity"/>
     </application>
 
 </manifest>

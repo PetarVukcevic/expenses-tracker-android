@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expensetracker.databinding.ActivityMainBinding;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
@@ -48,7 +47,7 @@ public class MainActivity extends Activity {
         mHeadingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TransactionsStatisticsActivity.class);
+                Intent intent = new Intent(MainActivity.this, IncomesStatisticsActivity.class);
                 startActivity(intent);
             }
         });

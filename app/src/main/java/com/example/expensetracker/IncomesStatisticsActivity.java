@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,11 +21,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class TransactionsStatisticsActivity extends Activity {
+public class IncomesStatisticsActivity extends Activity {
     private RecyclerView mRecyclerView;
     private DatabaseHelper databaseHelper;
     private TransactionsStatisticsTracker mAdapter;
     private Spinner timeFilterSpinner;
+    private TextView titleTextView;
 
     private static final int TIME_FILTER_ALL = 0;
     private static final int TIME_FILTER_TODAY = 1;
@@ -36,10 +37,11 @@ public class TransactionsStatisticsActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.transactions_stats_activity);
+        setContentView(R.layout.incomes_stats_activity);
         mRecyclerView = findViewById(R.id.recycler);
         timeFilterSpinner = findViewById(R.id.timeFilterSpinner);
-
+        titleTextView = findViewById(R.id.titleTextView);
+        
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
@@ -54,11 +56,19 @@ public class TransactionsStatisticsActivity extends Activity {
 
         // Close the database connection
         database.close();
-
+        
         // Initialize the RecyclerView and its adapter
         mAdapter = new TransactionsStatisticsTracker(transactions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private float calculateIncomeSum(List<Transaction> transactions) {
+        float sum = 0;
+        for (Transaction transaction : transactions) {
+            sum += transaction.getAmount();
+        }
+        return sum;
     }
 
     private void populateTimeFilterSpinner() {
@@ -108,14 +118,25 @@ public class TransactionsStatisticsActivity extends Activity {
                 cal.set(Calendar.MINUTE, 0);
                 cal.set(Calendar.SECOND, 0);
                 startTime = cal.getTimeInMillis();
+
             }
             // ... Other time filter cases ...
 
             transactions = getTransactions(database, startTime, endTime);
+
+
         }
 
         // Close the database connection
         database.close();
+
+        // Calculate the sum of income transactions
+        float sum = calculateIncomeSum(transactions);
+
+        // Update the titleTextView based on the selected time filter and the sum of income transactions
+        TextView titleTextView = findViewById(R.id.titleTextView);
+        String title = "Income: " + sum + "€";
+        titleTextView.setText(title);
 
         // Update the RecyclerView adapter with the new transactions
         mAdapter.setTransactions(transactions);
