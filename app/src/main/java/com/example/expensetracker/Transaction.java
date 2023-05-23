@@ -16,6 +16,7 @@ public class Transaction implements Serializable {
     private String type;
     private String date;
     private String description;
+    private int id;
 
     public Transaction(String title, float amount, String type, String category, String date) {
         this.title = title;
@@ -25,13 +26,22 @@ public class Transaction implements Serializable {
         this.date = date;
     }
 
-    public Transaction(String title, float amount, String category, String type, String date, String description) {
+    public Transaction(int id, String title, float amount, String category, String type, String date, String description) {
+        this.id = id;
         this.title = title;
         this.amount = amount;
         this.category = category;
         this.type = type;
         this.date = date;
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -70,40 +80,4 @@ public class Transaction implements Serializable {
         return type;
     }
 
-    public String convertRelativeDate(String relativeDate) {
-        // Parse the relative date and extract the numeric value and unit
-        String[] parts = relativeDate.split(" ");
-        int value = Integer.parseInt(parts[0]);
-        String unit = parts[1];
-
-        // Calculate the actual date based on the relative time
-        LocalDate currentDate = LocalDate.now();
-        LocalDate convertedDate;
-
-        switch (unit) {
-            case "day":
-            case "days":
-                convertedDate = currentDate.minusDays(value);
-                break;
-            case "week":
-            case "weeks":
-                convertedDate = currentDate.minusWeeks(value);
-                break;
-            case "month":
-            case "months":
-                convertedDate = currentDate.minusMonths(value);
-                break;
-            case "year":
-            case "years":
-                convertedDate = currentDate.minusYears(value);
-                break;
-            default:
-                System.out.println("Invalid unit: " + unit);
-                return "";
-        }
-
-        // Format the converted date as "dd/mm/yyyy"
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return convertedDate.format(formatter);
-    }
 }

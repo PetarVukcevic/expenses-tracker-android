@@ -142,6 +142,19 @@
                 android:layout_alignBaseline="@id/descriptionLabelTextView"
                 android:layout_marginTop="16dp"/>
 
+
         </RelativeLayout>
+
     </LinearLayout>
+    <Button
+        android:id="@+id/deleteButton"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/red"
+        android:padding="10dp"
+        android:text="@string/delete_button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

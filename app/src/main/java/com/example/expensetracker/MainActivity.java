@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
     private TextView mHeadingTextView;
     private TextView mAddExpenseButton;
     private TextView mAddIncomeButton;
-
     private DatabaseHelper databaseHelper;
     private RecyclerView mRecyclerView;
     private TransactionTracker mAdapter;
@@ -72,7 +71,6 @@ public class MainActivity extends Activity {
             }
         });
 
-
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
@@ -82,7 +80,6 @@ public class MainActivity extends Activity {
         if (database != null) {
             // Fetch expenses data from the database
             List<Transaction> transactions = getTransactions(database);
-
 
             // Call the getSumOfAmount method to retrieve the sum
             float sumOfExpenses = getSumOfAmount("transactions", "expenses",database);
@@ -117,10 +114,7 @@ public class MainActivity extends Activity {
             mHeadingTextView.setText("No budget, add new income");
         }
 
-
-
     }
-
 
 
     private void setUpGraph(SQLiteDatabase database) {
@@ -129,15 +123,15 @@ public class MainActivity extends Activity {
             List<Integer> colorsList = new ArrayList<>();
             float income = getSumOfAmount("transactions", "incomes", database);
             float expense = getSumOfAmount("transactions", "expenses", database);
-
+            float budget = income - expense;
             if (income != 0) {
-                float incomePercentage = (income / (income + expense)) * 100;
-                pieEntryList.add(new PieEntry(incomePercentage, "Incomes(%)"));
+                float incomePercentage = (budget / income) * 100;
+                pieEntryList.add(new PieEntry(incomePercentage, "Available(%)"));
                 colorsList.add(getResources().getColor(R.color.green));
             }
             if (expense != 0) {
-                float expensePercentage = (expense / (income + expense)) * 100;
-                pieEntryList.add(new PieEntry(expensePercentage, "Expenses(%)"));
+                float expensePercentage = (expense / income) * 100;
+                pieEntryList.add(new PieEntry(expensePercentage, "Not available(%)"));
                 colorsList.add(getResources().getColor(R.color.red));
             }
             PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
@@ -166,10 +160,10 @@ public class MainActivity extends Activity {
                         PieEntry selectedEntry = pieEntryList.get(index);
                         String label = selectedEntry.getLabel();
 
-                        if (label.equals("Incomes(%)")) {
+                        if (label.equals("Available(%)")) {
                             Intent intent = new Intent(MainActivity.this, IncomesStatisticsActivity.class);
                             startActivity(intent);
-                        } else if (label.equals("Expenses(%)")) {
+                        } else if (label.equals("Not available(%)")) {
                             Intent intent = new Intent(MainActivity.this, ExpensesStatisticsActivity.class);
                             startActivity(intent);
                         }
@@ -201,6 +195,7 @@ public class MainActivity extends Activity {
             Cursor cursor = database.rawQuery(query, null);
 
             try {
+                int idIndex = cursor.getColumnIndexOrThrow("id");
                 int titleIndex = cursor.getColumnIndexOrThrow("title");
                 int amountIndex = cursor.getColumnIndexOrThrow("amount");
                 int typeIndex = cursor.getColumnIndexOrThrow("type");
@@ -210,6 +205,7 @@ public class MainActivity extends Activity {
 
                 // Iterate over the cursor to retrieve expense data
                 while (cursor.moveToNext()) {
+                    int id = Integer.parseInt(cursor.getString(idIndex));
                     String title = cursor.getString(titleIndex);
                     float amount = cursor.getFloat(amountIndex);
                     String type = cursor.getString(typeIndex);
@@ -226,6 +222,7 @@ public class MainActivity extends Activity {
                     // Create an Expense object with the retrieved data and add it to the list
                     Transaction transaction = new Transaction(title, amount, type, category, relativeTime.toString());
                     transaction.setDescription(description);
+                    transaction.setId(id);
                     transactions.add(transaction);
                 }
             } catch (IllegalArgumentException e) {

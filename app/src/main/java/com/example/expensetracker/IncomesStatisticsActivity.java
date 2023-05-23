@@ -294,6 +294,7 @@ public class IncomesStatisticsActivity extends Activity {
         Cursor cursor = database.rawQuery(query, null);
 
         try {
+            int idIndex = cursor.getColumnIndexOrThrow("id");
             int titleIndex = cursor.getColumnIndexOrThrow("title");
             int amountIndex = cursor.getColumnIndexOrThrow("amount");
             int typeIndex = cursor.getColumnIndexOrThrow("type");
@@ -303,6 +304,7 @@ public class IncomesStatisticsActivity extends Activity {
 
             // Iterate over the cursor to retrieve expense data
             while (cursor.moveToNext()) {
+                int id = Integer.parseInt(cursor.getString(idIndex));
                 String title = cursor.getString(titleIndex);
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
@@ -320,6 +322,7 @@ public class IncomesStatisticsActivity extends Activity {
                 // Create a Transaction object with the retrieved data and add it to the list
                 Transaction transaction = new Transaction(title, amount, type, category, formattedDate);
                 transaction.setDescription(description);
+                transaction.setId(id);
                 transactions.add(transaction);
             }
         } catch (IllegalArgumentException e) {
