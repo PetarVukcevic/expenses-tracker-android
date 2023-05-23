@@ -1,0 +1,160 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/bigTitleTextView"
+        android:layout_marginTop="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Big Title"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:textColor="@color/blue_normal"
+        android:gravity="center" />
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/titleLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title:"
+                android:textStyle="italic"
+                android:textSize="20sp"
+                android:textColor="@color/blue_normal"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/black"
+                android:layout_toEndOf="@id/titleLabelTextView"
+                android:layout_marginStart="8dp"
+                android:layout_alignBaseline="@id/titleLabelTextView" />
+
+            <TextView
+                android:id="@+id/amountLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount:"
+                android:textStyle="italic"
+                android:textSize="20sp"
+                android:textColor="@color/blue_normal"
+                android:layout_below="@id/titleLabelTextView"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/amountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/black"
+                android:layout_toEndOf="@id/amountLabelTextView"
+                android:layout_marginStart="8dp"
+                android:layout_alignBaseline="@id/amountLabelTextView"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/categoryLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category:"
+                android:textStyle="italic"
+                android:textSize="20sp"
+                android:textColor="@color/blue_normal"
+                android:layout_below="@id/amountLabelTextView"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/categoryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/black"
+                android:layout_toEndOf="@id/categoryLabelTextView"
+                android:layout_marginStart="8dp"
+                android:layout_alignBaseline="@id/categoryLabelTextView"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/dateLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date:"
+                android:textStyle="italic"
+                android:textSize="20sp"
+                android:textColor="@color/blue_normal"
+                android:layout_below="@id/categoryLabelTextView"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/black"
+                android:layout_toEndOf="@id/dateLabelTextView"
+                android:layout_marginStart="8dp"
+                android:layout_alignBaseline="@id/dateLabelTextView"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/descriptionLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description:"
+                android:textStyle="italic"
+                android:textSize="20sp"
+                android:textColor="@color/blue_normal"
+                android:layout_below="@id/dateLabelTextView"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/black"
+                android:layout_toEndOf="@id/descriptionLabelTextView"
+                android:layout_marginStart="8dp"
+                android:layout_alignBaseline="@id/descriptionLabelTextView"
+                android:layout_marginTop="16dp"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/deleteButton"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/red"
+        android:padding="10dp"
+        android:text="@string/delete_button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

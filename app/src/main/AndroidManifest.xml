@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AddIncomeActivity"/>
+        <activity android:name=".AddExpenseActivity"/>
+        <activity android:name=".TransactionDetailsActivity"/>
+        <activity android:name=".IncomesStatisticsActivity"/>
+        <activity android:name=".ExpensesStatisticsActivity"/>
+        <activity android:name=".BudgetChangesActivity"/>
     </application>
 
 </manifest>

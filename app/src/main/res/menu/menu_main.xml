@@ -1,10 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.expensetracker.MainActivity">
+    tools:context="com.example.expensetracker.MainActivity"
+    android:visible="true">
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom"
+        android:visible="true" />
+
+    <!-- Add other menu items here -->
+
 </menu>

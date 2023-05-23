@@ -1,38 +1,75 @@
 package com.example.expensetracker;
 
 import android.app.Activity;
-import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.expensetracker.databinding.ActivityMainBinding;
-
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private TextView mHeadingTextView;
+    private TextView mAddExpenseButton;
+    private TextView mAddIncomeButton;
     private DatabaseHelper databaseHelper;
-
+    private RecyclerView mRecyclerView;
+    private TransactionTracker mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHeadingTextView = (TextView) findViewById(R.id.heading);
+        mHeadingTextView = (TextView) findViewById(R.id.budgetTextView);
+        mAddIncomeButton = (TextView) findViewById(R.id.addIncome);
+        mAddExpenseButton = (TextView) findViewById(R.id.addExpense);
+        mRecyclerView = findViewById(R.id.recycler);
+        mHeadingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BudgetChangesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mAddIncomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, AddIncomeActivity.class);
+                startActivity(i);
+            }
+        });
+
+        mAddExpenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, AddExpenseActivity.class);
+                startActivity(i);
+            }
+        });
 
         // Create an instance of your DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
@@ -40,68 +77,197 @@ public class MainActivity extends Activity {
         // Get a reference to the database
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
-        // Call the insert method to insert data into the table
-//        insert("incomes", "Salary", "This is my salary", 200.5F, database);
+        if (database != null) {
+            // Fetch expenses data from the database
+            List<Transaction> transactions = getTransactions(database);
 
-        // Call the getSumOfAmount method to retrieve the sum
-        float sumOfExpenses = getSumOfAmount("expenses", database);
-        float sumOfIncomes = getSumOfAmount("incomes", database);
+            // Call the getSumOfAmount method to retrieve the sum
+            float sumOfExpenses = getSumOfAmount("transactions", "expenses",database);
+            float sumOfIncomes = getSumOfAmount("transactions", "incomes",database);
 
-        // Close the database connection
-        database.close();
+            setUpGraph(database);
 
-        // Set the sum value to the TextView
-        mHeadingTextView.setText(Float.toString(sumOfIncomes - sumOfExpenses));
+            // Close the database connection
+            database.close();
+
+            // Initialize the RecyclerView and its adapter
+            if (transactions.isEmpty()) {
+                // No transactions, display a message or take appropriate action
+                mHeadingTextView.setText("No transactions available");
+            } else {
+                mAdapter = new TransactionTracker(transactions);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                mRecyclerView.setAdapter(mAdapter);
+
+                // Set the sum value to the TextView
+                if (sumOfIncomes == 0) {
+                    // No incomes, display a message
+                    mHeadingTextView.setText("No budget, add new income");
+                } else {
+                    // Incomes exist, calculate and display the budget
+                    float budget = sumOfIncomes - sumOfExpenses;
+                    mHeadingTextView.setText("Budget: " + Float.toString(budget) + "€");
+                }
+            }
+        }
+        else {
+            mHeadingTextView.setText("No budget, add new income");
+        }
+
     }
 
 
-    public void insert(String table, String title, String description, Float amount, SQLiteDatabase database) {
-        // Create an instance of your DatabaseHelper
-        databaseHelper = new DatabaseHelper(this);
+    private void setUpGraph(SQLiteDatabase database) {
+        if (database != null) {
+            List<PieEntry> pieEntryList = new ArrayList<>();
+            List<Integer> colorsList = new ArrayList<>();
+            float income = getSumOfAmount("transactions", "incomes", database);
+            float expense = getSumOfAmount("transactions", "expenses", database);
+            float budget = income - expense;
+            if (income != 0) {
+                float incomePercentage = (budget / income) * 100;
+                pieEntryList.add(new PieEntry(incomePercentage, "Available(%)"));
+                colorsList.add(getResources().getColor(R.color.green));
+            }
+            if (expense != 0) {
+                float expensePercentage = (expense / income) * 100;
+                pieEntryList.add(new PieEntry(expensePercentage, "Not available(%)"));
+                colorsList.add(getResources().getColor(R.color.red));
+            }
+            PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
+            pieDataSet.setColors(colorsList);
+            PieData pieData = new PieData(pieDataSet);
 
-        // Get a reference to the database
-        database = databaseHelper.getWritableDatabase();
+            PieChart pieChart = findViewById(R.id.pieChart);
+            pieChart.setData(pieData);
+            pieChart.invalidate();
 
-        // Create a ContentValues object to hold the values you want to insert
-        ContentValues values = new ContentValues();
-        values.put("title", title);
-        values.put("description", description);
-        values.put("amount", amount);
-        values.put("created_at", System.currentTimeMillis());
+            // Increase text size for entry labels
+            pieChart.setEntryLabelColor(Color.BLACK);
+            pieChart.setEntryLabelTextSize(14f); // Adjust the size as needed
+            pieChart.setEntryLabelTypeface(Typeface.DEFAULT_BOLD); // Set the typeface to bold
+            pieData.setValueTextSize(20f);
+            pieData.setValueTypeface(Typeface.DEFAULT_BOLD);
+            pieChart.getDescription().setEnabled(false);
 
-        // Insert the values into the table
-        long rowId = database.insert(table, null, values);
+            // Set onClick listener for the pie chart
+            pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry entry, Highlight highlight) {
+                    int index = (int) highlight.getX();
 
-        if (rowId != -1) {
-            // Insertion successful
-            // rowId contains the ID of the newly inserted row
-            System.out.println("Uspjesno opet");
-        } else {
-            // Insertion failed
-            System.out.println("Ne valja kurca");
+                    if (index >= 0 && index < pieEntryList.size()) {
+                        PieEntry selectedEntry = pieEntryList.get(index);
+                        String label = selectedEntry.getLabel();
 
+                        if (label.equals("Available(%)")) {
+                            Intent intent = new Intent(MainActivity.this, IncomesStatisticsActivity.class);
+                            startActivity(intent);
+                        } else if (label.equals("Not available(%)")) {
+                            Intent intent = new Intent(MainActivity.this, ExpensesStatisticsActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+
+                @Override
+                public void onNothingSelected() {
+                    // Do nothing
+                }
+            });
+
+
+            Legend legend = pieChart.getLegend();
+            legend.setTextSize(16f); // Set the desired text size for the legend
         }
-        database.close();
+
     }
 
-    public float getSumOfAmount(String tableName, SQLiteDatabase database) {
-        // Define the column to sum
-        String columnToSum = "amount";
 
-        // Execute the query to calculate the sum
-        String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName;
-        Cursor cursor = database.rawQuery(query, null);
+    // For each transaction
+// For each transaction
+    private List<Transaction> getTransactions(SQLiteDatabase database) {
+        if (database != null) {
+            List<Transaction> transactions = new ArrayList<>();
 
-        // Retrieve the sum value from the cursor
-        float totalAmount = 0.0f;
-        if (cursor.moveToFirst()) {
-            totalAmount = cursor.getFloat(0);
+            // Execute the query to fetch expenses from the "transactions" table
+            String query = "SELECT * FROM transactions ORDER BY created_at DESC";
+            Cursor cursor = database.rawQuery(query, null);
+
+            try {
+                int idIndex = cursor.getColumnIndexOrThrow("id");
+                int titleIndex = cursor.getColumnIndexOrThrow("title");
+                int amountIndex = cursor.getColumnIndexOrThrow("amount");
+                int typeIndex = cursor.getColumnIndexOrThrow("type");
+                int categoryIndex = cursor.getColumnIndexOrThrow("category");
+                int dateIndex = cursor.getColumnIndexOrThrow("created_at");
+                int descriptionIndex = cursor.getColumnIndexOrThrow("description");
+
+                // Iterate over the cursor to retrieve expense data
+                while (cursor.moveToNext()) {
+                    int id = Integer.parseInt(cursor.getString(idIndex));
+                    String title = cursor.getString(titleIndex);
+                    float amount = cursor.getFloat(amountIndex);
+                    String type = cursor.getString(typeIndex);
+                    String category = cursor.getString(categoryIndex);
+                    String date = cursor.getString(dateIndex);
+                    String description = cursor.getString(descriptionIndex);
+
+                    // Convert the date string to a timestamp
+                    long timestamp = Long.parseLong(date);
+
+                    // Format the timestamp as a relative time string
+                    CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(timestamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
+
+                    // Create an Expense object with the retrieved data and add it to the list
+                    Transaction transaction = new Transaction(title, amount, type, category, relativeTime.toString());
+                    transaction.setDescription(description);
+                    transaction.setId(id);
+                    transactions.add(transaction);
+                }
+            } catch (IllegalArgumentException e) {
+                Log.e("MainActivity", "Error retrieving expenses: " + e.getMessage());
+            } finally {
+                // Close the cursor
+                cursor.close();
+            }
+
+            return transactions;
+        }
+        else {
+            return null;
         }
 
-        // Close the cursor
-        cursor.close();
+    }
 
-        return totalAmount;
+
+
+
+    public float getSumOfAmount(String tableName, String type, SQLiteDatabase database) {
+
+        if (database != null) {
+            // Define the column to sum
+            String columnToSum = "amount";
+
+            // Execute the query to calculate the sum
+            String query = "SELECT SUM(" + columnToSum + ") FROM " + tableName + " WHERE type='" + type + "'";
+            Cursor cursor = database.rawQuery(query, null);
+
+            // Retrieve the sum value from the cursor
+            float totalAmount = 0.0f;
+            if (cursor.moveToFirst()) {
+                totalAmount = cursor.getFloat(0);
+            }
+
+            // Close the cursor
+            cursor.close();
+
+            return totalAmount;
+        }
+        else {
+            return 0;
+        }
+
     }
 
 
