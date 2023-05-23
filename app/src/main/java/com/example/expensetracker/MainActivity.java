@@ -88,8 +88,16 @@ public class MainActivity extends Activity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         // Set the sum value to the TextView
-        mHeadingTextView.setText("Budget: " + Float.toString(sumOfIncomes - sumOfExpenses) + "€");
-        
+
+        if (sumOfIncomes == 0) {
+            // No incomes, display a message
+            mHeadingTextView.setText("No budget, add new income");
+        } else {
+            // Incomes exist, calculate and display the budget
+            float budget = sumOfIncomes - sumOfExpenses;
+            mHeadingTextView.setText("Budget: " + Float.toString(sumOfIncomes - sumOfExpenses) + "€");
+        }
+
     }
 
     private void setUpGraph(SQLiteDatabase database) {

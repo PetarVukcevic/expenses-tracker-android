@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,10 +45,6 @@ public class ExpensesStatisticsActivity extends Activity {
     private BarChart barChart;
 
     private static final int TIME_FILTER_ALL = 0;
-    private static final int TIME_FILTER_TODAY = 1;
-    private static final int TIME_FILTER_THIS_WEEK = 2;
-    private static final int TIME_FILTER_THIS_MONTH = 3;
-    private static final int TIME_FILTER_THIS_YEAR = 4;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,7 +156,7 @@ public class ExpensesStatisticsActivity extends Activity {
         // Create a bar data set
         BarDataSet dataSet = new BarDataSet(entries, "Expenses");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        dataSet.setValueTextSize(12f); // Set the desired text size for the values on top of the bars
+        dataSet.setValueTextSize(14f); // Set the desired text size for the values on top of the bars
 
         // Create the bar data
         BarData barData = new BarData(dataSet);
@@ -244,7 +240,6 @@ public class ExpensesStatisticsActivity extends Activity {
         float sum = calculateExpenseSum(transactions);
 
         // Update the titleTextView based on the selected time filter and the sum of income transactions
-        TextView titleTextView = findViewById(R.id.titleTextView);
         String title = "Expenses: " + sum + "€";
         titleTextView.setText(title);
 
