@@ -17,9 +17,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-
-
-
         String createTransactionsTableQuery = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT, description TEXT, amount REAL, created_at TIMESTAMP, " +
                 "category TEXT, type TEXT)";

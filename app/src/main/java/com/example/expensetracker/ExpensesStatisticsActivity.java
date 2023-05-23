@@ -227,6 +227,32 @@ public class ExpensesStatisticsActivity extends Activity {
 
             }
             // ... Other time filter cases ...
+            else if (timeFilter.equals("This Week")) {
+                // Set start time to the beginning of the current week
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                startTime = cal.getTimeInMillis();
+            } else if (timeFilter.equals("This Month")) {
+                // Set start time to the beginning of the current month
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                startTime = cal.getTimeInMillis();
+            } else if (timeFilter.equals("This Year")) {
+                // Set start time to the beginning of the current year
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                startTime = cal.getTimeInMillis();
+            }
 
             transactions = getTransactions(database, startTime, endTime);
 
