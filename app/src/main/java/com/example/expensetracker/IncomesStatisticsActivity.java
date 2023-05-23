@@ -15,11 +15,25 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class IncomesStatisticsActivity extends Activity {
     private RecyclerView mRecyclerView;
@@ -27,6 +41,7 @@ public class IncomesStatisticsActivity extends Activity {
     private TransactionsStatisticsTracker mAdapter;
     private Spinner timeFilterSpinner;
     private TextView titleTextView;
+    private BarChart barChart;
 
     private static final int TIME_FILTER_ALL = 0;
     private static final int TIME_FILTER_TODAY = 1;
@@ -61,7 +76,101 @@ public class IncomesStatisticsActivity extends Activity {
         mAdapter = new TransactionsStatisticsTracker(transactions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+
+        barChart = findViewById(R.id.barChart);
+        setupBarChart();
+        updateTransactionsBasedOnTimeFilter("All Time");
     }
+
+    private void setupBarChart() {
+        // Configure the bar chart
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawValueAboveBar(true);
+        barChart.getDescription().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
+
+        // Format the x-axis labels as categories
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setTextSize(14f);
+        xAxis.setGranularity(1f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        // Format the y-axis labels as currency values
+        YAxis leftAxis = barChart.getAxisLeft();
+        leftAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return value + "€";
+            }
+        });
+        leftAxis.setTextSize(14f); // Set the desired text size for the values
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setSpaceTop(30f);
+        barChart.getAxisRight().setEnabled(false);
+
+        // Remove the legend
+        Legend legend = barChart.getLegend();
+        legend.setEnabled(false);
+
+
+        // Disable interactions with the chart
+        barChart.setTouchEnabled(false);
+        barChart.setDragEnabled(false);
+        barChart.setScaleEnabled(false);
+        // Adjust the bottom padding
+        barChart.setExtraBottomOffset(10f); // Set the desired bottom padding value
+        barChart.setFitBars(true);
+    }
+
+    private void updateBarChart(List<Transaction> transactions) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+
+        // Prepare the data for the bar chart
+        HashMap<String, Float> categoryAmountMap = new HashMap<>();
+
+        for (Transaction transaction : transactions) {
+            String category = transaction.getCategory();
+            float amount = transaction.getAmount();
+
+            if (categoryAmountMap.containsKey(category)) {
+                // Category already exists, add the amount to the existing value
+                float existingAmount = categoryAmountMap.get(category);
+                categoryAmountMap.put(category, existingAmount + amount);
+            } else {
+                // New category, add it to the map
+                categoryAmountMap.put(category, amount);
+            }
+        }
+
+        int index = 0;
+        for (Map.Entry<String, Float> entry : categoryAmountMap.entrySet()) {
+            String category = entry.getKey();
+            float amount = entry.getValue();
+
+            entries.add(new BarEntry(index, amount));
+            labels.add(category);
+
+            index++;
+        }
+
+        // Create a bar data set
+        BarDataSet dataSet = new BarDataSet(entries, "Incomes");
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        dataSet.setValueTextSize(12f); // Set the desired text size for the values on top of the bars
+
+        // Create the bar data
+        BarData barData = new BarData(dataSet);
+
+        // Set the data to the chart and refresh
+        barChart.setData(barData);
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        barChart.notifyDataSetChanged();
+        barChart.invalidate();
+    }
+
 
     private float calculateIncomeSum(List<Transaction> transactions) {
         float sum = 0;
@@ -141,6 +250,9 @@ public class IncomesStatisticsActivity extends Activity {
         // Update the RecyclerView adapter with the new transactions
         mAdapter.setTransactions(transactions);
         mAdapter.notifyDataSetChanged();
+
+        // Update the bar chart with the new transactions
+        updateBarChart(transactions);
     }
 
     private List<Transaction> getTransactions(SQLiteDatabase database, Long startTime, Long endTime) {

@@ -29,9 +29,11 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ExpensesStatisticsActivity extends Activity {
 
@@ -128,13 +130,31 @@ public class ExpensesStatisticsActivity extends Activity {
         ArrayList<String> labels = new ArrayList<>();
 
         // Prepare the data for the bar chart
-        HashSet<String> uniqueCategories = new HashSet<>();
+        HashMap<String, Float> categoryAmountMap = new HashMap<>();
+
         for (Transaction transaction : transactions) {
-            if (!uniqueCategories.contains(transaction.getCategory())) {
-                uniqueCategories.add(transaction.getCategory());
-                entries.add(new BarEntry(entries.size(), transaction.getAmount()));
-                labels.add(transaction.getCategory());
+            String category = transaction.getCategory();
+            float amount = transaction.getAmount();
+
+            if (categoryAmountMap.containsKey(category)) {
+                // Category already exists, add the amount to the existing value
+                float existingAmount = categoryAmountMap.get(category);
+                categoryAmountMap.put(category, existingAmount + amount);
+            } else {
+                // New category, add it to the map
+                categoryAmountMap.put(category, amount);
             }
+        }
+
+        int index = 0;
+        for (Map.Entry<String, Float> entry : categoryAmountMap.entrySet()) {
+            String category = entry.getKey();
+            float amount = entry.getValue();
+
+            entries.add(new BarEntry(index, amount));
+            labels.add(category);
+
+            index++;
         }
 
         // Create a bar data set
@@ -151,6 +171,7 @@ public class ExpensesStatisticsActivity extends Activity {
         barChart.notifyDataSetChanged();
         barChart.invalidate();
     }
+
 
     private float calculateExpenseSum(List<Transaction> transactions) {
         float sum = 0;
