@@ -94,8 +94,8 @@ public class MainActivity extends Activity {
         mAdapter = new TransactionTracker(transactions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-        // Set the sum value to the TextView
 
+        // Set the sum value to the TextView
         if (sumOfIncomes == 0) {
             // No incomes, display a message
             mHeadingTextView.setText("No budget, add new income");
