@@ -21,6 +21,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -194,7 +195,7 @@ public class BudgetChangesActivity extends Activity {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
         xAxis.setDrawGridLines(false);
-        xAxis.setTextSize(14f); // Set the text size of x-labels
+        xAxis.setTextSize(14f); // Adjust the text size of x-labels
 
         // Customize the appearance of the Y axis
         yAxis.setDrawGridLines(true);
@@ -207,6 +208,7 @@ public class BudgetChangesActivity extends Activity {
         // Invalidate the line chart to refresh its display
         lineChart.invalidate();
     }
+
 
 
     public ArrayList<Transaction> getTransactionData(SQLiteDatabase database) {

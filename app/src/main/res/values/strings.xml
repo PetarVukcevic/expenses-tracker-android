@@ -21,6 +21,7 @@
     <!--  Add Income, Add transaction button  -->
     <string name="add_income_button">Add Income</string>
     <string name="add_expense_button">Add Expense</string>
+    <string name="delete_button">Clear budget</string>
 
 
 </resources>

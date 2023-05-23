@@ -47,5 +47,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Handle other database upgrades here if needed
     }
 
+    // Method to delete all transactions
+    public void deleteAllTransactions() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("transactions", null, null);
+    }
+
 
 }

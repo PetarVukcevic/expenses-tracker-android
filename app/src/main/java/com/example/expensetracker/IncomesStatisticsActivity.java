@@ -235,8 +235,12 @@ public class IncomesStatisticsActivity extends Activity {
         // Close the database connection
         database.close();
 
-        // Calculate the sum of income transactions
-        float sum = calculateIncomeSum(transactions);
+        float sum = 0;
+        if (transactions != null) {
+            // Calculate the sum of income transactions
+            sum = calculateIncomeSum(transactions);
+        }
+
 
         // Update the titleTextView based on the selected time filter and the sum of income transactions
         String title = "Incomes: " + sum + "€";
